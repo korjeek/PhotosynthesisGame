@@ -7,7 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fb9f7c2-a3a3-4e0f-89d8-896d875a284e" name="Changes" comment="" />
+    <list default="true" id="2fb9f7c2-a3a3-4e0f-89d8-896d875a284e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/SpringChallenge/Action.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SpringChallenge/Action.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringChallenge/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SpringChallenge/Game.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,7 +22,20 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "korjeek"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/korjeek/PhotosynthesisGame.git",
+    "accountId": "8aac9063-bd28-4e48-b446-21f8b70041e7"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1b81cb3be224213a6a73519b6e340a628d9a1fb8629c351a186a26f6376669/List.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SpringChallenge/Cell.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SpringChallenge/Game.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SpringChallenge/Player.cs" root0="FORCE_HIGHLIGHTING" />
@@ -38,6 +54,7 @@
     ".NET Project.SpringChallenge.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -79,7 +96,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1774856408893</updated>
-      <workItem from="1774856414763" duration="7248000" />
+      <workItem from="1774856414763" duration="10121000" />
     </task>
     <servers />
   </component>
