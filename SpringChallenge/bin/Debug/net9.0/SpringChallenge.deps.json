@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "SpringChallenge/1.0.0": {
+        "runtime": {
+          "SpringChallenge.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SpringChallenge/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

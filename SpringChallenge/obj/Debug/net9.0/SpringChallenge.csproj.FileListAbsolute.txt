@@ -1,0 +1,14 @@
+D:\RiderProjects\SpringChallenge\SpringChallenge\bin\Debug\net9.0\SpringChallenge.exe
+D:\RiderProjects\SpringChallenge\SpringChallenge\bin\Debug\net9.0\SpringChallenge.deps.json
+D:\RiderProjects\SpringChallenge\SpringChallenge\bin\Debug\net9.0\SpringChallenge.runtimeconfig.json
+D:\RiderProjects\SpringChallenge\SpringChallenge\bin\Debug\net9.0\SpringChallenge.dll
+D:\RiderProjects\SpringChallenge\SpringChallenge\bin\Debug\net9.0\SpringChallenge.pdb
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\SpringChallenge.GeneratedMSBuildEditorConfig.editorconfig
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\SpringChallenge.AssemblyInfoInputs.cache
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\SpringChallenge.AssemblyInfo.cs
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\SpringChallenge.csproj.CoreCompileInputs.cache
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\SpringChallenge.dll
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\refint\SpringChallenge.dll
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\SpringChallenge.pdb
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\SpringChallenge.genruntimeconfig.cache
+D:\RiderProjects\SpringChallenge\SpringChallenge\obj\Debug\net9.0\ref\SpringChallenge.dll
