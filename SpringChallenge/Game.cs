@@ -20,60 +20,58 @@ public class Game
 
     public Action GetNextAction()
     {
-        var mySize2 = trees.Count(t => t is { isMine: true, size: 2 });
-        var mySize3 = trees.Count(t => t is { isMine: true, size: 3 });
-        
-        var completeCandidates = trees
-            .Where(t => t is { isMine: true, size: 3, isDormant: false })
-            .Select(t => new { t.cellIndex, Bonus = GetBonus(t.cellIndex) })
-            .ToList();
-
-        if (completeCandidates.Count != 0 && mySun >= 4)
+        // Если единственное доступное действие - WAIT
+        if (possibleActions is [{ type: Action.WAIT }])
         {
-            var best = completeCandidates.OrderByDescending(c => c.Bonus).First();
-            return new Action(Action.COMPLETE, best.cellIndex);
+            return possibleActions[0];
         }
-        
-        var costGrow23 = 7 + mySize3;
-        var grow23Candidates = trees
-            .Where(t => t is { isMine: true, size: 2, isDormant: false })
-            .Select(t => new { t.cellIndex, Richness = GetRichness(t.cellIndex) })
-            .ToList();
 
-        if (grow23Candidates.Count != 0 && mySun >= costGrow23)
+        // 1. COMPLETE (Завершение цикла)
+        // Завершаем, если дерево стоит на хорошей почве (richness)
+        var completes = possibleActions.Where(a => a.type == Action.COMPLETE).ToList();
+        if (completes.Count != 0)
         {
-            var best = grow23Candidates.OrderByDescending(c => c.Richness).First();
-            return new Action(Action.GROW, best.cellIndex);
+            // Выбираем дерево на самой богатой клетке для получения бонуса
+            var bestComplete = completes.OrderByDescending(a => GetRichness(a.targetCellIdx)).First();
+            return bestComplete;
         }
-        
-        var costGrow12 = 3 + mySize2;
-        var grow12Candidates = trees
-            .Where(t => t.isMine && t is { size: 1, isDormant: false })
-            .Select(t => new { t.cellIndex, Richness = GetRichness(t.cellIndex) })
-            .ToList();
 
-        if (grow12Candidates.Count != 0 && mySun >= costGrow12)
+        // 2. GROW (Рост)
+        var grows = possibleActions.Where(a => a.type == Action.GROW).ToList();
+        if (grows.Count != 0)
         {
-            var best = grow12Candidates.OrderByDescending(c => c.Richness).First();
-            return new Action(Action.GROW, best.cellIndex);
+            // Стратегия: предпочитаем растить деревья, которые уже большие (size 2 -> 3), 
+            // так как они приносят больше солнца и готовятся к COMPLETE.
+            // Для этого найдем размер дерева, которое собираемся растить.
+            var bestGrow = grows.OrderByDescending(a => 
+            {
+                var tree = trees.First(t => t.cellIndex == a.targetCellIdx);
+                return tree.size; // Чем больше текущий размер, тем выше приоритет
+            }).First();
+            
+            return bestGrow;
         }
-        
-        return new Action(Action.WAIT);
+
+        // 3. SEED (Посадка семян)
+        var seeds = possibleActions.Where(a => a.type == Action.SEED).ToList();
+        if (seeds.Count != 0)
+        {
+            // Ограничиваем количество семян, чтобы не тратить все солнце на малышей
+            int mySeedsCount = trees.Count(t => t is { isMine: true, size: 0 });
+            int myTreesCount = trees.Count(t => t.isMine);
+            
+            if (mySeedsCount < 2 && myTreesCount < 6) 
+            {
+                // Кидаем семечко на самую богатую почву
+                var bestSeed = seeds.OrderByDescending(a => GetRichness(a.targetCellIdx)).First();
+                return bestSeed;
+            }
+        }
+
+        // 4. WAIT (Конец хода)
+        // Если не хотим тратить очки или нет выгодных действий
+        return possibleActions.First(a => a.type == Action.WAIT);
     }
     
-    private int GetBonus(int cellIndex)
-    {
-        var richness = GetRichness(cellIndex);
-        return richness switch
-        {
-            3 => 4,
-            2 => 2,
-            _ => 0
-        };
-    }
-    
-    private int GetRichness(int cellIndex)
-    {
-        return board.First(c => c.index == cellIndex).richness;
-    }
+    private int GetRichness(int cellIndex) => board.First(c => c.index == cellIndex).richness;
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SpringChallenge")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e24d0fa74e9529b196359a1cf24ecec9dad1f232")]
 [assembly: System.Reflection.AssemblyProductAttribute("SpringChallenge")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SpringChallenge")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
