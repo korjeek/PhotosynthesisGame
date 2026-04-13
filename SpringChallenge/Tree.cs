@@ -14,4 +14,10 @@ public class Tree
         this.isMine = isMine;
         this.isDormant = isDormant;
     }
+
+    public Tree Clone() => new(
+        cellIndex, 
+        size, 
+        isMine, 
+        isDormant);
 }

@@ -1,4 +1,6 @@
-﻿namespace SpringChallenge;
+﻿using System.Diagnostics;
+
+namespace SpringChallenge;
 
 public class Game
 {
@@ -20,58 +22,120 @@ public class Game
 
     public Action GetNextAction()
     {
-        // Если единственное доступное действие - WAIT
-        if (possibleActions is [{ type: Action.WAIT }])
-        {
-            return possibleActions[0];
-        }
-
-        // 1. COMPLETE (Завершение цикла)
-        // Завершаем, если дерево стоит на хорошей почве (richness)
+        // 1. Если можем ЗАВЕРШИТЬ дерево (COMPLETE) — делаем это почти всегда (как в твоем baseline)
         var completes = possibleActions.Where(a => a.type == Action.COMPLETE).ToList();
-        if (completes.Count != 0)
-        {
-            // Выбираем дерево на самой богатой клетке для получения бонуса
-            var bestComplete = completes.OrderByDescending(a => GetRichness(a.targetCellIdx)).First();
-            return bestComplete;
+        if (completes.Count != 0) {
+            return completes
+                .OrderByDescending(a => GameState.Board[a.targetCellIdx].richness)
+                .First();
         }
 
-        // 2. GROW (Рост)
-        var grows = possibleActions.Where(a => a.type == Action.GROW).ToList();
-        if (grows.Count != 0)
-        {
-            // Стратегия: предпочитаем растить деревья, которые уже большие (size 2 -> 3), 
-            // так как они приносят больше солнца и готовятся к COMPLETE.
-            // Для этого найдем размер дерева, которое собираемся растить.
-            var bestGrow = grows.OrderByDescending(a => 
-            {
-                var tree = trees.First(t => t.cellIndex == a.targetCellIdx);
-                return tree.size; // Чем больше текущий размер, тем выше приоритет
-            }).First();
-            
-            return bestGrow;
-        }
+        // 2. Ограничиваем семена (SEED), чтобы бот не спамил ими как сумасшедший
+        var mySeeds = trees.Count(t => t is { isMine: true, size: 0 });
+        var filteredActions = possibleActions
+            .Where(a => a.type != Action.SEED || mySeeds < 1)
+            .ToList();
 
-        // 3. SEED (Посадка семян)
-        var seeds = possibleActions.Where(a => a.type == Action.SEED).ToList();
-        if (seeds.Count != 0)
-        {
-            // Ограничиваем количество семян, чтобы не тратить все солнце на малышей
-            int mySeedsCount = trees.Count(t => t is { isMine: true, size: 0 });
-            int myTreesCount = trees.Count(t => t.isMine);
-            
-            if (mySeedsCount < 2 && myTreesCount < 6) 
-            {
-                // Кидаем семечко на самую богатую почву
-                var bestSeed = seeds.OrderByDescending(a => GetRichness(a.targetCellIdx)).First();
-                return bestSeed;
-            }
-        }
-
-        // 4. WAIT (Конец хода)
-        // Если не хотим тратить очки или нет выгодных действий
-        return possibleActions.First(a => a.type == Action.WAIT);
+        if (filteredActions.Count == 1) 
+            return filteredActions[0];
+        if (filteredActions.Count == 0) 
+            return possibleActions.First(a => a.type == Action.WAIT);
+        
+        return MonteCarlo.Run(this, filteredActions);
     }
     
-    private int GetRichness(int cellIndex) => board.First(c => c.index == cellIndex).richness;
+    public void ApplyAction(Action action)
+    {
+        if (action.type == Action.WAIT) 
+            return;
+        
+        var targetTree = trees
+            .FirstOrDefault(t => t.cellIndex == action.targetCellIdx);
+
+        switch (action.type)
+        {
+            case Action.GROW when targetTree != null:
+                targetTree.size++;
+                targetTree.isDormant = true;
+                break;
+            case Action.SEED:
+            {
+                var sourceTree = trees.FirstOrDefault(t => t.cellIndex == action.sourceCellIdx);
+                if (sourceTree != null) 
+                    sourceTree.isDormant = true;
+                trees.Add(new Tree(action.targetCellIdx, 0, true, true));
+                break;
+            }
+            case Action.COMPLETE when targetTree != null:
+            {
+                trees.Remove(targetTree);
+                var bonus = board[action.targetCellIdx].richness switch
+                {
+                    3 => 4,
+                    2 => 2,
+                    _ => 0
+                };
+                myScore += nutrients + bonus;
+                nutrients = Math.Max(0, nutrients - 1);
+                break;
+            }
+        }
+    }
+    
+    public void EndDay()
+    {
+        var sunDir = day % 6;
+        var shadowLevel = new int[37];
+        foreach (var tree in trees)
+        {
+            var current = tree.cellIndex;
+            for (var i = 1; i <= tree.size; i++)
+            {
+                current = board[current].neighbours[sunDir];
+                if (current == -1) 
+                    break;
+                shadowLevel[current] = Math.Max(shadowLevel[current], tree.size);
+            }
+        }
+        foreach (var tree in trees)
+        {
+            if (shadowLevel[tree.cellIndex] < tree.size)
+            {
+                if (tree.isMine) mySun += tree.size;
+                else opponentSun += tree.size;
+            }
+            tree.isDormant = false;
+        }
+        day++;
+    }
+    
+    public double Evaluate()
+    {
+        double score = myScore - opponentScore;
+        foreach (var tree in trees)
+        {
+            var val = tree.size * 4 + board[tree.cellIndex].richness;
+            if (tree.isMine) 
+                score += val; 
+            else 
+                score -= val;
+        }
+        return score + mySun / 3.0 - opponentSun / 3.0;
+    }
+
+    public Game Clone()
+    {
+        var clone = new Game {
+            day = day, 
+            nutrients = nutrients, 
+            board = board,
+            mySun = mySun, 
+            opponentSun = opponentSun,
+            myScore = myScore, 
+            opponentScore = opponentScore,
+            trees = new List<Tree>(trees.Select(t => t.Clone()))
+        };
+        
+        return clone;
+    }
 }
